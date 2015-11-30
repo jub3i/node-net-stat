@@ -32,7 +32,7 @@ Require the module:
 var netStat = require('net-stat');
 ```
 
-By default `totalRx()` returns values in bytes for interface `lo`
+By default `totalRx()` returns values in bytes for interface `lo`:
 ```
 var totalrx = netStat.totalRx();
 console.log(totalrx);
@@ -44,7 +44,7 @@ var totalrx = netStat.totalRx({ iface: 'eth0', units: 'GiB' });
 console.log(totalrx);
 ```
 
-Calculate the received KiB per second of eth0 over the next 2000ms
+Calculate the received KiB per second of eth0 over the next 2000ms:
 ```
 setInterval(function() {
   netStat.usageRx({
@@ -57,7 +57,7 @@ setInterval(function() {
 }, 2500);
 ```
 
-Get all fields available from `/proc/net/dev`
+Get all fields available from `/proc/net/dev`:
 ```
 var allStats = netStat.raw();
 console.log(allStats);
