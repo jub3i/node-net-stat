@@ -212,5 +212,3 @@ setInterval(function() {
     console.log('Transmitted ' + kbps + ' kb/s');
   });
 }, 1200);
-
-console.log(raw());
