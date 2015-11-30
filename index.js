@@ -45,16 +45,17 @@ function totalTx(opts) {
 }
 
 function usageRx(opts, cb) {
-  if (opts) {
-    opts.iface = opts.iface || 'lo';
-    opts.units = opts.units || 'bytes';
-    opts.sampleMs = opts.sampleMs || 1000;
-  } else {
+  if (typeof opts === 'function') {
+    cb = opts;
     opts = {
       iface: 'lo',
       units: 'bytes',
       sampleMs: 1000,
     };
+  } else {
+    opts.iface = opts.iface || 'lo';
+    opts.units = opts.units || 'bytes';
+    opts.sampleMs = opts.sampleMs || 1000;
   }
 
   var time;
@@ -79,16 +80,17 @@ function usageRx(opts, cb) {
 }
 
 function usageTx(opts, cb) {
-  if (opts) {
-    opts.iface = opts.iface || 'lo';
-    opts.units = opts.units || 'bytes';
-    opts.sampleMs = opts.sampleMs || 1000;
-  } else {
+  if (typeof opts === 'function') {
+    cb = opts;
     opts = {
       iface: 'lo',
       units: 'bytes',
       sampleMs: 1000,
     };
+  } else {
+    opts.iface = opts.iface || 'lo';
+    opts.units = opts.units || 'bytes';
+    opts.sampleMs = opts.sampleMs || 1000;
   }
 
   var time;
