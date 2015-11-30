@@ -24,8 +24,8 @@ Install
 npm install net-stat
 ```
 
-Example
--------
+Examples
+--------
 
 Require the module:
 ```
