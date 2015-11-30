@@ -13,7 +13,9 @@ net-stat
 
 **Note:** This repo can be found on npm here: [net-stat](https://www.npmjs.com/package/net-stat)
 
-**Caveat:** Works by parsing `/proc/net/dev` - so will only work on nix OS.
+**Note:** This repo can be found on github here: [node-net-stat](https://github.com/jub3i/node-net-stat)
+
+**Caveat:** Works by parsing `/proc/net/dev`, so will only work on nix OS.
 
 Install
 -------
@@ -25,16 +27,22 @@ npm install net-stat
 Example
 -------
 
+Require the module:
 ```
 var netStat = require('net-stat');
+```
 
-//by default returns values in bytes
-var totalrx = netStat.totalRx('eth0');
+By default `totalRx()` returns values in bytes for interface `lo`
+```
+var totalrx = netStat.totalRx();
 console.log(totalrx);
+```
 
-//return value in GiB, see docs below for allowed values of units
-var totalrx = netStat.totalRx('eth0', 'GiB');
+Return value in GiB on interface `eth0`, see docs below for allowed values of units and `iface`:
+```
+var totalrx = netStat.totalRx({ iface: 'eth0', units: 'GiB' });
 console.log(totalrx);
+```
 
 //calculate the average received KiB per second of eth0 over the next 3000ms
 netStat.usageRx('eth0', 'KiB', 3000, function(data) {
@@ -49,22 +57,24 @@ console.log(allStats);
 totalRx(iface, units)
 ---------------------
 
-Returns an integer representing the number of `units` received on `iface`.
+Returns a number representing the number of `units` received on `iface`.
 
 Option        | Type         | Default       | Explanation
 ------------- | -------------| ------------- | ------------
-iface         | `String`     | `'lo'`        | The name of the interface to be used. See the `raw()` function for a list of interfaces.
-units         | `String`     | `'bytes'`     | The units of the returned value, can be one of `bytes`, `KiB`, `MiB` or `GiB`.
+opts          | `Object`     | see below     | Options object, specify what you need the defaults will be filled in
+opts.iface    | `String`     | `'lo'`        | The name of the interface to be used. See the `raw()` function for a list of interfaces.
+opts.units    | `String`     | `'bytes'`     | The units of the returned value, can be one of `bytes`, `KiB`, `MiB` or `GiB`.
 
 totalTx(iface, units)
 ---------------------
 
-Returns an integer representing the number of `units` transmitted on `iface`.
+Returns a number representing the number of `units` transmitted on `iface`.
 
 Option        | Type         | Default       | Explanation
 ------------- | -------------| ------------- | ------------
-iface         | `String`     | `'lo'`        | The name of the interface to be used. See the `raw()` function for a list of interfaces.
-units         | `String`     | `'bytes'`     | The units of the returned value, can be one of `bytes`, `KiB`, `MiB` or `GiB`.
+opts          | `Object`     | see below     | Options object, specify what you need the defaults will be filled in
+opts.iface    | `String`     | `'lo'`        | The name of the interface to be used. See the `raw()` function for a list of interfaces.
+opts.units    | `String`     | `'bytes'`     | The units of the returned value, can be one of `bytes`, `KiB`, `MiB` or `GiB`.
 
 usageRx(iface, units, sampleMs, cb)
 -----------------------------------
@@ -105,6 +115,16 @@ Areas ripe for contribution:
 - cross compatability for windows and darwin/osx
 - performance
 - bugs
+
+Other Stat Modules
+------------------
+
+- cpu-stat [npm](https://www.npmjs.com/package/cpu-stat) [git](https://github.com/jub3i/node-cpu-stat)
+- net-stat [npm](https://www.npmjs.com/package/net-stat) [git](https://github.com/jub3i/node-net-stat)
+- disk-stat [npm](https://www.npmjs.com/package/disk-stat) [git](https://github.com/jub3i/node-disk-stat)
+- mem-stat [npm](https://www.npmjs.com/package/mem-stat) [git](https://github.com/jub3i/node-mem-stat)
+
+**Note:** `net-stat`, `disk-stat`, `mem-stat` only work on nix platforms.
 
 License
 -------

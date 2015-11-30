@@ -10,22 +10,36 @@ module.exports = {
 
 /* PUBLIC */
 
-function totalRx(iface, units) {
-  iface = iface || 'lo';
-  units = units || 'bytes';
+function totalRx(opts) {
+  if (opts) {
+    opts.iface = opts.iface || 'lo';
+    opts.units = opts.units || 'bytes';
+  } else {
+    opts = {
+      iface: 'lo',
+      units: 'bytes',
+    };
+  }
 
-  var total = parseInt(_parseProcNetDev()[iface].bytes.receive);
-  var converted = _bytesTo(total, units);
+  var total = parseInt(_parseProcNetDev()[opts.iface].bytes.receive);
+  var converted = _bytesTo(total, opts.units);
 
   return converted;
 }
 
-function totalTx(iface, units) {
-  iface = iface || 'lo';
-  units = units || 'bytes';
+function totalTx(opts) {
+  if (opts) {
+    opts.iface = opts.iface || 'lo';
+    opts.units = opts.units || 'bytes';
+  } else {
+    opts = {
+      iface: 'lo',
+      units: 'bytes',
+    };
+  }
 
-  var total = parseInt(_parseProcNetDev()[iface].bytes.transmit);
-  var converted = _bytesTo(total, units);
+  var total = parseInt(_parseProcNetDev()[opts.iface].bytes.transmit);
+  var converted = _bytesTo(total, opts.units);
 
   return converted;
 }
