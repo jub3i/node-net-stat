@@ -38,13 +38,13 @@ var totalrx = netStat.totalRx();
 console.log(totalrx);
 ```
 
-Return value in GiB on interface `eth0`, see docs below for allowed values of units and `iface`:
+Return value in GiB on interface `eth0`, see docs below for accepted values of `units` and `iface`:
 ```
 var totalrx = netStat.totalRx({ iface: 'eth0', units: 'GiB' });
 console.log(totalrx);
 ```
 
-Calculate the received KiB per second of eth0 over the next 2000ms:
+Calculate the received KiB per second of `eth0` over the next 2000ms:
 ```
 setInterval(function() {
   netStat.usageRx({
@@ -57,7 +57,7 @@ setInterval(function() {
 }, 2500);
 ```
 
-Get all fields available from `/proc/net/dev`:
+Get all fields available from `/proc/net/dev`, useful for finding accepted values of `iface`:
 ```
 var allStats = netStat.raw();
 console.log(allStats);
