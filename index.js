@@ -202,13 +202,3 @@ function _bytesTo(bytes, units) {
   //variable.
   return bytes;
 }
-
-setInterval(function() {
-  usageTx({
-    iface: 'eth0',
-    units: 'KiB',
-    sampleMs: 1000,
-  }, function(kbps) {
-    console.log('Transmitted ' + kbps + ' kb/s');
-  });
-}, 1200);
