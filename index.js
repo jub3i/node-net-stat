@@ -44,55 +44,77 @@ function totalTx(opts) {
   return converted;
 }
 
-function usageRx(iface, units, sampleMs, cb) {
-  iface = iface || 'lo';
-  units = units || 'bytes';
-  sampleMs = sampleMs || 1000;
+function usageRx(opts, cb) {
+  if (opts) {
+    opts.iface = opts.iface || 'lo';
+    opts.units = opts.units || 'bytes';
+    opts.sampleMs = opts.sampleMs || 1000;
+  } else {
+    opts = {
+      iface: 'lo',
+      units: 'bytes',
+      sampleMs: 1000,
+    };
+  }
 
   var time;
-  var totalDelta0 = _parseProcNetDev()[iface].bytes.receive;
+
+  //take first measurement
+  var total0 = _parseProcNetDev()[opts.iface].bytes.receive;
   time = process.hrtime();
 
   setTimeout(function() {
-    var totalDelta1 = _parseProcNetDev()[iface].bytes.receive;
-
+    //take second measurement
+    var total1 = _parseProcNetDev()[opts.iface].bytes.receive;
     var diff = process.hrtime(time);
     var diffSeconds = diff[0] + diff[1] * 1e-9;
 
-    var total = parseInt(totalDelta1) - parseInt(totalDelta0);
+    //do the calculations
+    var total = parseInt(total1) - parseInt(total0);
     var totalPerSecond = total / (diffSeconds * diffSeconds);
-    var converted = _bytesTo(totalPerSecond, units);
+    var converted = _bytesTo(totalPerSecond, opts.units);
 
     return cb(converted);
-  }, sampleMs);
+  }, opts.sampleMs);
 }
 
-function usageTx(iface, units, sampleMs, cb) {
-  iface = iface || 'lo';
-  units = units || 'bytes';
-  sampleMs = sampleMs || 1000;
+function usageTx(opts, cb) {
+  if (opts) {
+    opts.iface = opts.iface || 'lo';
+    opts.units = opts.units || 'bytes';
+    opts.sampleMs = opts.sampleMs || 1000;
+  } else {
+    opts = {
+      iface: 'lo',
+      units: 'bytes',
+      sampleMs: 1000,
+    };
+  }
 
   var time;
-  var totalDelta0 = _parseProcNetDev()[iface].bytes.transmit;
+
+  //take first measurement
+  var total0 = _parseProcNetDev()[opts.iface].bytes.transmit;
   time = process.hrtime();
 
   setTimeout(function() {
-    var totalDelta1 = _parseProcNetDev()[iface].bytes.transmit;
-
+    //take second measurement
+    var total1 = _parseProcNetDev()[opts.iface].bytes.transmit;
     var diff = process.hrtime(time);
     var diffSeconds = diff[0] + diff[1] * 1e-9;
 
-    var total = parseInt(totalDelta1) - parseInt(totalDelta0);
+    //do the calculations
+    var total = parseInt(total1) - parseInt(total0);
     var totalPerSecond = total / (diffSeconds * diffSeconds);
-    var converted = _bytesTo(totalPerSecond, units);
+    var converted = _bytesTo(totalPerSecond, opts.units);
 
     return cb(converted);
-  }, sampleMs);
+  }, opts.sampleMs);
 }
 
-//NOTE: can use this function to determine what interfaces are available by listing
-//the return objects keys
 //NOTE: raw `/proc/net/dev` as object
+//NOTE: can use this function to determine what interfaces are available by listing
+//      the return objects keys
 function raw() {
   return _parseProcNetDev();
 }
@@ -180,3 +202,15 @@ function _bytesTo(bytes, units) {
   //variable.
   return bytes;
 }
+
+setInterval(function() {
+  usageTx({
+    iface: 'eth0',
+    units: 'KiB',
+    sampleMs: 1000,
+  }, function(kbps) {
+    console.log('Transmitted ' + kbps + ' kb/s');
+  });
+}, 1200);
+
+console.log(raw());

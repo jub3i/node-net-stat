@@ -44,52 +44,62 @@ var totalrx = netStat.totalRx({ iface: 'eth0', units: 'GiB' });
 console.log(totalrx);
 ```
 
-//calculate the average received KiB per second of eth0 over the next 3000ms
-netStat.usageRx('eth0', 'KiB', 3000, function(data) {
-    console.log('Transmitted ' + data + ' kb/s');
-});
+Calculate the received KiB per second of eth0 over the next 2000ms
+```
+setInterval(function() {
+  netStat.usageRx({
+    iface: 'eth0',
+    units: 'KiB',
+    sampleMs: 2000,
+  }, function(kbps) {
+    console.log('Transmitted ' + kbps + ' kb/s');
+  });
+}, 2500);
+```
 
-//get all fields available from `/proc/net/dev`
+Get all fields available from `/proc/net/dev`
+```
 var allStats = netStat.raw();
 console.log(allStats);
 ```
 
-totalRx(iface, units)
+totalRx([opts])
 ---------------------
 
 Returns a number representing the number of `units` received on `iface`.
 
 Option        | Type         | Default       | Explanation
 ------------- | -------------| ------------- | ------------
-opts          | `Object`     | see below     | Options object, specify what you need the defaults will be filled in
+opts          | `Object`     | see below     | Options object, specify what you need, the defaults will be filled in
 opts.iface    | `String`     | `'lo'`        | The name of the interface to be used. See the `raw()` function for a list of interfaces.
 opts.units    | `String`     | `'bytes'`     | The units of the returned value, can be one of `bytes`, `KiB`, `MiB` or `GiB`.
 
-totalTx(iface, units)
+totalTx([opts])
 ---------------------
 
 Returns a number representing the number of `units` transmitted on `iface`.
 
 Option        | Type         | Default       | Explanation
 ------------- | -------------| ------------- | ------------
-opts          | `Object`     | see below     | Options object, specify what you need the defaults will be filled in
+opts          | `Object`     | see below     | Options object, specify what you need, the defaults will be filled in
 opts.iface    | `String`     | `'lo'`        | The name of the interface to be used. See the `raw()` function for a list of interfaces.
 opts.units    | `String`     | `'bytes'`     | The units of the returned value, can be one of `bytes`, `KiB`, `MiB` or `GiB`.
 
-usageRx(iface, units, sampleMs, cb)
------------------------------------
+usageRx([opts,] cb)
+-------------------
 
 Async function which returns `data`, the usage received per second in `units` on `iface` over `sampleMs`
 
 Option        | Type         | Default       | Explanation
 ------------- | -------------| ------------- | ------------
-iface         | `String`     | `'lo'`        | The name of the interface to be used. See the `raw()` function for a list of interfaces.
-units         | `String`     | `'bytes'`     | The units of the returned value, can be one of `bytes`, `KiB`, `MiB` or `GiB`.
-sampleMs      | `Number`     | `1000`        | The number of milliseconds to take a usage sample over.
+opts          | `Object`     | see below     | Options object, specify what you need, the defaults will be filled in
+opts.iface    | `String`     | `'lo'`        | The name of the interface to be used. See the `raw()` function for a list of interfaces.
+opts.units    | `String`     | `'bytes'`     | The units of the returned value, can be one of `bytes`, `KiB`, `MiB` or `GiB`.
+opts.sampleMs | `Number`     | `1000`        | The number of milliseconds to take a usage sample over.
 cb            | `Function`   | none          | A callback function with signature `cb(data)` where `data` is the usage received per second in `units` on `iface` over `sampleMs`.
 
-usageTx(iface, units, sampleMs, cb)
------------------------------------
+usageTx([opts,] cb)
+-------------------
 
 Async function which returns `data`, the usage transmitted per second in `units` on `iface` over `sampleMs`
 
@@ -104,6 +114,35 @@ raw()
 -----
 
 Returns an object representing the data in `/proc/net/dev`.
+
+```
+{
+  eth0: {
+    bytes: { receive: '2085477580', transmit: '187911353' },
+    packets: { receive: '1782197', transmit: '1353772' },
+    errs: { receive: '0', transmit: '0' },
+    drop: { receive: '42', transmit: '0' },
+    fifo: { receive: '0', transmit: '0' },
+    frame: { receive: '0' },
+    compressed: { receive: '0', transmit: '0' },
+    multicast: { receive: '7923' },
+    colls: { transmit: '0' },
+    carrier: { transmit: '0' }
+  },
+  lo: {
+    bytes: { receive: '52720310', transmit: '52720310' },
+    packets: { receive: '443962', transmit: '443962' },
+    errs: { receive: '0', transmit: '0' },
+    drop: { receive: '0', transmit: '0' },
+    fifo: { receive: '0', transmit: '0' },
+    frame: { receive: '0' },
+    compressed: { receive: '0', transmit: '0' },
+    multicast: { receive: '0' },
+    colls: { transmit: '0' },
+    carrier: { transmit: '0' }
+  },
+}
+```
 
 Contributing
 ------------
