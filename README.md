@@ -32,22 +32,22 @@ Require the module:
 var netStat = require('net-stat');
 ```
 
-By default `totalRx()` returns values in bytes for interface `lo`:
+By default `totalRx()` returns total received bytes for interface `lo`:
 ```
 var totalrx = netStat.totalRx();
 console.log(totalrx);
 ```
 
-Return value in GiB on interface `eth0`, see docs below for accepted values of `units` and `iface`:
+Return total received GiB on interface `eth0`, see docs below for accepted values of `units` and `iface`:
 ```
 var totalrx = netStat.totalRx({ iface: 'eth0', units: 'GiB' });
 console.log(totalrx);
 ```
 
-Calculate the received KiB per second of `eth0` over the next 2000ms:
+Display the transmitted KiB per second of `eth0` over the next 2000ms:
 ```
 setInterval(function() {
-  netStat.usageRx({
+  netStat.usageTx({
     iface: 'eth0',
     units: 'KiB',
     sampleMs: 2000,
@@ -105,9 +105,10 @@ Async function which returns `data`, the usage transmitted per second in `units`
 
 Option        | Type         | Default       | Explanation
 ------------- | -------------| ------------- | ------------
-iface         | `String`     | `'lo'`        | The name of the interface to be used. See the `raw()` function for a list of interfaces.
-units         | `String`     | `'bytes'`     | The units of the returned value, can be one of `bytes`, `KiB`, `MiB` or `GiB`.
-sampleMs      | `Number`     | `1000`        | The number of milliseconds to take a usage sample over.
+opts          | `Object`     | see below     | Options object, specify what you need, the defaults will be filled in
+opts.iface    | `String`     | `'lo'`        | The name of the interface to be used. See the `raw()` function for a list of interfaces.
+opts.units    | `String`     | `'bytes'`     | The units of the returned value, can be one of `bytes`, `KiB`, `MiB` or `GiB`.
+opts.sampleMs | `Number`     | `1000`        | The number of milliseconds to take a usage sample over.
 cb            | `Function`   | none          | A callback function with signature `cb(data)` where `data` is the usage transmitted per second in `units` on `iface` over `sampleMs`.
 
 raw()
